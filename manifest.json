@@ -1,0 +1,23 @@
+{
+    "name": "Youtue-Height-Lighter",
+    "version": "0.2",
+    "description": "A Youtube height Lighter",
+    "permissions": ["activeTab", "declarativeContent"],
+    "background": {
+      "scripts": ["popup.js","background.js"],
+      "persistent": false
+    },
+    "icons": {
+        "16": "images/YTHL_icon16.png",
+        "32": "images/YTHL_icon32.png",
+        "48": "images/YTHL_icon48.png",
+        "128": "images/YTHL_icon128.png"
+      },
+      "page_action": {
+        "default_title": "YTHL"
+      },
+    "manifest_version": 2,
+    "content_scripts":[],
+    "web_accessible_resources":["injectYT.js","axios.min.js","YTHL.css"]
+  }
+  

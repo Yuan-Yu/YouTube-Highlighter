@@ -1,0 +1,15 @@
+ythl {
+    position: absolute;
+    background-color: #448ef6;
+    z-index: 60;
+    top: -3px;
+    left: -5px;
+    height: calc(100% + 6px);
+    width: 11px;
+    border-radius: 11px;
+}
+
+ythl:hover {
+    height: calc(100% + 10px);
+    top: -5px;
+}
