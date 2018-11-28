@@ -1,6 +1,6 @@
 {
     "name": "Youtue-Height-Lighter",
-    "version": "0.2",
+    "version": "0.3",
     "description": "A Youtube height Lighter",
     "permissions": ["activeTab", "declarativeContent"],
     "background": {
