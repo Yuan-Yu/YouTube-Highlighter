@@ -144,7 +144,7 @@ function createHighLight(timePoint,comment,duration){
   return point;
 }
 function getLinkCountRange(){
-  currentLikeCounts.sort();
+  currentLikeCounts.sort((a,b)=>{return a-b});
   var range = {};
   var q1 = currentLikeCounts[Math.floor((currentLikeCounts.length * 0.25))];
   var q3  = currentLikeCounts[Math.ceil((currentLikeCounts.length * 0.75))];
@@ -154,6 +154,7 @@ function getLinkCountRange(){
   range.min = (range.min>0)?range.min:0;
   return range;
 }
+
 function colorPointByLinkCount(point,max,min){
   if( (point.likeCount > max) || max == min){
     point.style.backgroundColor = "rgb("+maxColor[0]+","+maxColor[1]+","+maxColor[2]+")";
@@ -167,6 +168,7 @@ function colorPointByLinkCount(point,max,min){
     point.style.backgroundColor = "rgb("+r+","+g+","+b+")";
   }
 }
+
 function colorPoints(){
   var YTHLs = document.getElementsByTagName('YTHL');
   var range = getLinkCountRange();
@@ -175,6 +177,7 @@ function colorPoints(){
     colorPointByLinkCount(YTHL,range.max,range.min);
   }
 }
+
 function removeYTHL(){
   var YTHLs = document.getElementsByTagName('YTHL');
   var length = YTHLs.length;
