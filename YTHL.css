@@ -1,6 +1,6 @@
 ythl {
     position: absolute;
-    background-color: #448ef6;
+    background-color: rgb(218,232,253);
     z-index: 60;
     top: -3px;
     left: -5px;
@@ -12,4 +12,30 @@ ythl {
 ythl:hover {
     height: calc(100% + 10px);
     top: -5px;
+    z-index: 62;
+}
+
+ythl .tooltip {
+    visibility: hidden;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    width: 360px;
+    min-height: 30px;
+    top: 100%;
+    border-radius: 4px;
+    margin-left: -180px;
+    padding: 6px;
+    /* Position the tooltip */
+    position: absolute;
+    font-size: 13px;
+    z-index: 60;
+    cursor:default;
+}
+ythl:hover .tooltip {
+    visibility: visible;
+}
+.html5-video-player {
+    overflow: visible;
+    /* overflow-x: hidden ; */
+    /* overflow-y: visible !important; */
 }
