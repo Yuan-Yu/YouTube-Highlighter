@@ -1,8 +1,8 @@
 {
-    "name": "Youtue-Height-Lighter",
+    "name": "YouTube-HighLighter",
 	"short_name": "YTHL",
     "version": "0.5",
-    "description": "A Youtube height Lighter",
+    "description": "A YouTube Highlighter",
     "permissions": ["activeTab", "declarativeContent"],
     "background": {
       "scripts": ["popup.js","background.js"],

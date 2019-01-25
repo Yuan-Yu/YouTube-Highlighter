@@ -17,7 +17,7 @@ ythl:hover {
 
 ythl .tooltip {
     visibility: hidden;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.6);
     color: #fff;
     width: 360px;
     min-height: 30px;
