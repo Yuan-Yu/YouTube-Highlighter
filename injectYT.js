@@ -19,7 +19,7 @@ function formatQueryURL(key,videoID,pagetoken){
     return queryURL;
 }
   
-function nestDo(key,videoID,times,maxTimes,callback,pagetoken,finalCallbock){
+function nestDo(key,videoID,times,maxTimes,callback,pagetoken,finalCallback){
   if(typeof(pagetoken)== "undefined") pagetoken = "";
   let queryURL = formatQueryURL(key,videoID,pagetoken);
   axios.get(queryURL).then((response)=>{
@@ -28,12 +28,12 @@ function nestDo(key,videoID,times,maxTimes,callback,pagetoken,finalCallbock){
     times += 1;
     if(times < maxTimes){
       if(typeof(data['nextPageToken']) != "undefined"){
-        nestDo(key,videoID,times,maxTimes,callback,data['nextPageToken'],finalCallbock)
+        nestDo(key,videoID,times,maxTimes,callback,data['nextPageToken'],finalCallback)
       }else{
-        finalCallbock();
+        finalCallback();
       }
     }else{
-      finalCallbock();
+      finalCallback();
     }
   })
 }
