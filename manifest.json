@@ -1,7 +1,7 @@
 {
     "name": "YouTube-HighLighter",
 	"short_name": "YTHL",
-    "version": "0.5",
+    "version": "0.6",
     "description": "A YouTube Highlighter",
     "permissions": ["activeTab", "declarativeContent"],
     "background": {

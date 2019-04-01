@@ -39,3 +39,7 @@ ythl:hover .tooltip {
     /* overflow-x: hidden ; */
     /* overflow-y: visible !important; */
 }
+
+#player {
+    z-index: 10;
+}
