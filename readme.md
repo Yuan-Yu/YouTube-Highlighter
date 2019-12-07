@@ -7,5 +7,5 @@ A chrome extension for highlighting video timecode in progress bar
 Demo: [https://youtu.be/D3iHoMllNYs](https://youtu.be/D3iHoMllNYs)  
 
 ## Install: 
-Install YTHL through Chrome extension store: [Link](https://chrome.google.com/webstore/detail/youtube-highlighter/limiokhejhkocbjagcmddfmcmkclilhm)
+Install YTHL through Chrome extension store: [Link](https://chrome.google.com/webstore/detail/yt-highlighter/emahhjficejdbffpflmncnflpmphohof)
 
