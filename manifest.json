@@ -1,9 +1,9 @@
 {
     "name": "YT-HighLighter",
 	"short_name": "YTHL",
-    "version": "0.7",
+    "version": "0.8",
     "description": "A Highlighter for YouTube",
-    "permissions": ["activeTab", "declarativeContent"],
+    "permissions": ["tabs","activeTab", "declarativeContent","https://www.youtube.com/*"],
     "background": {
       "scripts": ["popup.js","background.js"],
       "persistent": false

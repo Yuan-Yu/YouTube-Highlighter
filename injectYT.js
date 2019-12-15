@@ -45,6 +45,7 @@ function handleRawout(data){
       comments = comments.concat(extractCommentInfo(item));
     });
   }
+  // console.log(typeof(comments));
   return comments.filter(comment => comment['timePoints'].length > 0);
 }
 
@@ -67,6 +68,7 @@ function handleInfo(spippet){
   comment['authorProfileImageUrlc'] = spippet['authorProfileImageUrl'];
   comment['timePoints'] = parseTime(comment['textDisplay']);
   comment['textOriginal'] = spippet['textOriginal'];
+  comment['source'] = 'comment';
   return comment;
 }
 
@@ -105,13 +107,19 @@ function textTime2Sencond(textTime){
   }
   return unitInSecond;
 }
+function renderCommentsHighLigh(data){
+  let comments = handleRawout(data);
+  renderBar(comments);
+}
 
-function renderBar(data){
-  var comments = handleRawout(data);
+function renderBar(comments){
   var duration = player.getDuration();
   var bar = document.getElementsByClassName('ytp-progress-bar')[0];
   var barPadding = document.getElementsByClassName('ytp-progress-bar-padding')[0];
-  var highLighElements = []
+  var highLighElements = [];
+  // console.log(typeof(comments));
+  // console.log(comments);
+
   comments.forEach((comment) =>{
     highLighElements = highLighElements.concat(createHighLights(comment,duration));
   });
@@ -140,6 +148,8 @@ function createHighLight(timePoint,comment,duration){
     event.stopPropagation();
     player.seekTo(timePoint,true);
   };
+
+  highLighElement.classList.add(comment.source);
   highLighElement.onmousedown = function(event){event.stopPropagation();};
   highLighElement.onmouseup = function(event){event.stopPropagation();};
   highLighElement.onmouseover = function(event){ changeTooltipPositon(this);};
@@ -189,10 +199,11 @@ function colorPointByLinkCount(highLighElement,max,min){
 }
 
 function colorhighLighElement(){
-  var YTHLs = document.getElementsByTagName('YTHL');
-  var range = getLinkCountRange();
-  for(var i=0;i<YTHLs.length;i++){
-    var YTHL = YTHLs[i];
+  // var YTHLs = document.getElementsByTagName('YTHL');
+  let YTHLs = document.querySelectorAll("YTHL.comment");
+  let range = getLinkCountRange();
+  for(let i=0;i<YTHLs.length;i++){
+    let YTHL = YTHLs[i];
     colorPointByLinkCount(YTHL,range.max,range.min);
   }
 }
@@ -213,6 +224,90 @@ function runYTHL(){
     currentLikeCounts = [];
     var videoID = re.exec(document.URL)[0];
     while(re.exec(document.URL)){};
-    nestDo(YOURAPIKEY,videoID,0,5,renderBar,"",colorhighLighElement);
+    nestDo(YOURAPIKEY,videoID,0,5,renderCommentsHighLigh,"",colorhighLighElement);
   }
 }
+
+function getDescription(){
+  let YTData = document.getElementById('scriptTag').innerText;
+  return JSON.parse(YTData).description;
+}
+
+var timePatternInDescription = /(\d+:)+(\d+)/g;
+function parseDescription(description){
+  let lines = description.split('\n');
+  let comments = [];
+  lines.forEach((line)=>{
+    let comment = {};
+    comment.likeCount = 0;
+    comment.textDisplay = line;
+    comment.timePoints = parseTimeDesc(line);
+    comment.source = 'description';
+    comments.push(comment);
+  });
+  return comments.filter(comment => comment.timePoints.length > 0);
+}
+
+function parseTimeDesc(descriptionLine){
+  let timePoints = [];
+  let digitTime;
+  while(digitTime = timePatternInDescription.exec(descriptionLine)){
+    timePoints.push(digitTime2Sencond(digitTime[0]));
+  }
+  return timePoints;
+}
+
+function digitTime2Sencond(digitTime){
+  var unitInSecond = 0;
+  digits = digitTime.split(':').reverse();
+  for(let i=0;i<digits.length;i++){
+    let value= parseInt(digits[i]);
+    switch(i){
+      case 3:
+        unitInSecond += value * 86400;
+        break;
+      case 2:
+        unitInSecond += value * 3600;
+        break;
+      case 1:
+        unitInSecond += value * 60;
+        break;
+      case 0:
+        unitInSecond += value;
+        break;          
+    }
+  }
+  return unitInSecond;
+}
+function renderDesHighLight(description){
+  let comments = parseDescription(description);
+  renderBar(comments);
+}
+
+
+
+function removeYTHL(){
+  var YTHLs = document.getElementsByTagName('YTHL');
+  var length = YTHLs.length;
+  for(var i=0;i<length;i++){
+    let YTHL = YTHLs[0];
+    YTHL.parentNode.removeChild(YTHL);
+  }
+  // console.log('Remove Tages');
+}
+
+function autoRun(){
+    let description = getDescription();
+    renderDesHighLight(description);
+}
+
+
+
+var desNode = document.querySelector('#description yt-formatted-string');
+var obs = new MutationObserver(()=>{
+  // console.log('description change!!!!~~~~~~~~~~~~~~~~~~~~~~~~~');
+  removeYTHL();
+  autoRun();
+});
+obs.observe(desNode,{characterData:true,subtree: true, childList: true});
+autoRun();

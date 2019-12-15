@@ -1,13 +1,15 @@
 'use strict';
 
 
-function injectScript(tab){
-  chrome.tabs.executeScript(tab.id,{file:"injector.js"});
+function execYTHL(tab){
+  chrome.tabs.executeScript(tab.id,{code:"runScriptInDom('runYTHL()');"});
 }
-chrome.pageAction.onClicked.addListener(injectScript);
+chrome.pageAction.onClicked.addListener(execYTHL);
+
+
+var YTURLPatten = /.*?www.youtube.com\/watch\?.*/g;
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
-  var isTitleChanged = (changeInfo.title)?true:false;
-  if (tab.id == tabId && isTitleChanged){
-    chrome.tabs.executeScript(tab.id,{code:"removeYTHL();"});
+  if(tab.url.match(YTURLPatten)){
+    chrome.tabs.executeScript(tab.id,{file:"injector.js"});
   }
 });

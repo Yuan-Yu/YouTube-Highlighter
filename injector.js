@@ -1,13 +1,13 @@
-if(!document.YTHL){
-    document.YTHL = true;
-    importCSS('YTHL.css');
-    importScriptToDom('axios.min.js',()=>{
-        importScriptToDom('injectYT.js',()=>{
-            runScriptInDom('runYTHL()');
-        })
-    })
-}else{
-    runScriptInDom('runYTHL()');
+
+importYTHLScriptCSS();
+function importYTHLScriptCSS(){
+    if(!document.YTHL){
+        document.YTHL = true;
+        importCSS('YTHL.css');
+        importScriptToDom('axios.min.js',()=>{
+            importScriptToDom('injectYT.js');
+        });
+    }
 }
 
 function importScriptToDom(scriptName,callback){
@@ -37,15 +37,3 @@ function importCSS(cssName,callback){
     s1.href = chrome.extension.getURL(cssName);
     (document.head||document.documentElement).appendChild(s1);
 }
-
-
-
-function removeYTHL(){
-    var YTHLs = document.getElementsByTagName('YTHL');
-    var length = YTHLs.length;
-    for(var i=0;i<length;i++){
-      let YTHL = YTHLs[0];
-      YTHL.parentNode.removeChild(YTHL);
-    }
-  }
-
