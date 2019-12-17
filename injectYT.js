@@ -7,7 +7,7 @@ var player = document.getElementById('movie_player');
 var re = /((?<=v\=)(.*)(?=[&]))|((?<=v\=)(.*))/g;
 var lastURL = "";
 var currentLikeCounts = [];
-
+var maxCommentLines = 6;
 window.addEventListener('popstate',removeYTHL);
 
 
@@ -23,7 +23,7 @@ function nestDo(key,videoID,times,maxTimes,callback,pagetoken,finalCallback){
   if(typeof(pagetoken)== "undefined") pagetoken = "";
   let queryURL = formatQueryURL(key,videoID,pagetoken);
   axios.get(queryURL).then((response)=>{
-    var data = response['data'];
+    let data = response['data'];
     callback(data);
     times += 1;
     if(times < maxTimes){
@@ -39,37 +39,55 @@ function nestDo(key,videoID,times,maxTimes,callback,pagetoken,finalCallback){
 }
 
 function handleRawout(data){
-  var comments = [];
+  let comments = [];
   if(items = data['items']){
     items.forEach((item)=>{
-      comments = comments.concat(extractCommentInfo(item));
+      Array.prototype.push.apply(comments,extractCommentInfo(item))
     });
   }
-  // console.log(typeof(comments));
   return comments.filter(comment => comment['timePoints'].length > 0);
 }
-
 function extractCommentInfo(item){
-  var comments = [];
-  comments.push(handleInfo(item['snippet']['topLevelComment']['snippet']));
+  let comments = [];
+  Array.prototype.push.apply(comments, handleInfo(item['snippet']['topLevelComment']['snippet']));
   if(item['replies']){
     item['replies']['comments'].forEach((replieItem)=>{
-      comments.push(handleInfo(replieItem['snippet']));
+      Array.prototype.push.apply(comments, replieItem['snippet']);
     });
   }
   return comments;
 }
 
 function handleInfo(spippet){
-  var comment = {};
-  comment['likeCount'] = spippet['likeCount'];
-  comment['textDisplay'] = spippet['textDisplay'];
-  comment['authorDisplayName'] = spippet['authorDisplayName'];
-  comment['authorProfileImageUrlc'] = spippet['authorProfileImageUrl'];
-  comment['timePoints'] = parseTime(comment['textDisplay']);
-  comment['textOriginal'] = spippet['textOriginal'];
-  comment['source'] = 'comment';
-  return comment;
+  let comments = [];
+  let subTextDisplay = spippet['textDisplay'].split('<br />');
+  
+  if(subTextDisplay.length <= maxCommentLines){
+    let comment = {};
+    // console.log(spippet['textDisplay']);
+    comment['likeCount'] = spippet['likeCount'];
+    comment['textDisplay'] = spippet['textDisplay'];
+    comment['authorDisplayName'] = spippet['authorDisplayName'];
+    comment['authorProfileImageUrl'] = spippet['authorProfileImageUrl'];
+    comment['timePoints'] = parseTime(spippet['textDisplay']);
+    comment['textOriginal'] = spippet['textOriginal'];
+    comment['source'] = 'comment';
+    comments.push(comment);
+    // console.log('111');
+  }else{
+    subTextDisplay.forEach((line)=>{
+      let comment = {};
+      comment['likeCount'] = spippet['likeCount'];
+      comment['textDisplay'] = line;
+      comment['authorDisplayName'] = spippet['authorDisplayName'];
+      comment['authorProfileImageUrl'] = spippet['authorProfileImageUrl'];
+      comment['timePoints'] = parseTime(line);
+      comment['textOriginal'] = spippet['textOriginal'];
+      comment['source'] = 'comment';
+      comments.push(comment);
+    })
+  }
+  return comments;
 }
 
 
@@ -117,8 +135,6 @@ function renderBar(comments){
   var bar = document.getElementsByClassName('ytp-progress-bar')[0];
   var barPadding = document.getElementsByClassName('ytp-progress-bar-padding')[0];
   var highLighElements = [];
-  // console.log(typeof(comments));
-  // console.log(comments);
 
   comments.forEach((comment) =>{
     highLighElements = highLighElements.concat(createHighLights(comment,duration));
@@ -130,7 +146,6 @@ function renderBar(comments){
 
 function createHighLights(comment,duration){
   var highLighElements = [];
-  // console.log(comment);
   comment['timePoints'].forEach((timePoint)=> {
     if(timePoint<duration){
       highLighElements.push(createHighLight(timePoint,comment,duration));
@@ -171,7 +186,7 @@ function changeTooltipPositon(highLighElement){
     tooltip.style.marginLeft = -(currentTooltipRight - parentWidth + tooltipSize*0.5) + "px";
   }
 }
-function getLinkCountRange(){
+function getLikeCountRange(){
   currentLikeCounts.sort((a,b)=>{return a-b});
   var range = {};
   var q1 = currentLikeCounts[Math.ceil((currentLikeCounts.length * 0.25))];
@@ -183,7 +198,7 @@ function getLinkCountRange(){
   return range;
 }
 
-function colorPointByLinkCount(highLighElement,max,min){
+function colorPointByLikeCount(highLighElement,max,min){
   if( (highLighElement.likeCount > max) || max == min){
     highLighElement.style.zIndex = 61;
     highLighElement.style.backgroundColor = "rgb("+maxColor[0]+","+maxColor[1]+","+maxColor[2]+")";
@@ -199,12 +214,11 @@ function colorPointByLinkCount(highLighElement,max,min){
 }
 
 function colorhighLighElement(){
-  // var YTHLs = document.getElementsByTagName('YTHL');
   let YTHLs = document.querySelectorAll("YTHL.comment");
-  let range = getLinkCountRange();
+  let range = getLikeCountRange();
   for(let i=0;i<YTHLs.length;i++){
     let YTHL = YTHLs[i];
-    colorPointByLinkCount(YTHL,range.max,range.min);
+    colorPointByLikeCount(YTHL,range.max,range.min);
   }
 }
 
@@ -293,7 +307,7 @@ function removeYTHL(){
     let YTHL = YTHLs[0];
     YTHL.parentNode.removeChild(YTHL);
   }
-  // console.log('Remove Tages');
+
 }
 
 function autoRun(){
@@ -305,7 +319,6 @@ function autoRun(){
 
 var desNode = document.querySelector('#description yt-formatted-string');
 var obs = new MutationObserver(()=>{
-  // console.log('description change!!!!~~~~~~~~~~~~~~~~~~~~~~~~~');
   removeYTHL();
   autoRun();
 });

@@ -12,8 +12,11 @@ Install YTHL through Chrome extension store: [Link](https://chrome.google.com/we
 
 ## Feature:  
 
+#### Features of version 0.9:  
+Split comments when the comments is too long.  
+
 #### Features of version 0.8:  
-Add timecode from the *description* of video.  
+Add timecode from the **description** of video.  
 
 #### Features of version 0.7:  
 Change the name of the extension to YT-HighLighter.  
