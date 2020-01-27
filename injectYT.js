@@ -64,7 +64,6 @@ function handleInfo(spippet){
   
   if(subTextDisplay.length <= maxCommentLines){
     let comment = {};
-    // console.log(spippet['textDisplay']);
     comment['likeCount'] = spippet['likeCount'];
     comment['textDisplay'] = spippet['textDisplay'];
     comment['authorDisplayName'] = spippet['authorDisplayName'];
@@ -73,7 +72,6 @@ function handleInfo(spippet){
     comment['textOriginal'] = spippet['textOriginal'];
     comment['source'] = 'comment';
     comments.push(comment);
-    // console.log('111');
   }else{
     subTextDisplay.forEach((line)=>{
       let comment = {};
@@ -315,12 +313,20 @@ function autoRun(){
     renderDesHighLight(description);
 }
 
+async function setDesNodeObserver(){
+  let desNode = null;
+  while(!desNode){
+    desNode = document.querySelector('#description yt-formatted-string');
+    await new Promise(r => setTimeout(r, 600));
+  }
+  
+  let obs = new MutationObserver(()=>{
+    removeYTHL();
+    autoRun();
+  });
+  obs.observe(desNode,{characterData:true,subtree: true, childList: true});
+}
 
 
-var desNode = document.querySelector('#description yt-formatted-string');
-var obs = new MutationObserver(()=>{
-  removeYTHL();
-  autoRun();
-});
-obs.observe(desNode,{characterData:true,subtree: true, childList: true});
+setDesNodeObserver();
 autoRun();
