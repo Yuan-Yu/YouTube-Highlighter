@@ -12,6 +12,9 @@ Install YTHL through Chrome extension store: [Link](https://chrome.google.com/we
 
 ## Feature:  
 
+#### Features of version 0.10:  
+Fix bug that cause highlight can't be remove.  
+
 #### Features of version 0.9:  
 Split comments when the comments is too long.  
 
