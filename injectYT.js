@@ -240,9 +240,13 @@ function runYTHL(){
   }
 }
 
-function getDescription(){
-  let YTData = document.getElementById('scriptTag').innerText;
-  return JSON.parse(YTData).description;
+async function getDescription(){
+  let scriptTag = document.getElementById('scriptTag');
+  while(!scriptTag){
+    scriptTag = document.getElementById('scriptTag');
+    await new Promise(r => setTimeout(r, 600));
+  }
+  return JSON.parse(scriptTag.innerText).description;
 }
 
 var timePatternInDescription = /(\d+:)+(\d+)/g;
@@ -308,13 +312,13 @@ function removeYTHL(){
 
 }
 
-function autoRun(){
-    let description = getDescription();
+async function autoRun(){
+    let description = await getDescription();
     renderDesHighLight(description);
 }
 
 async function setDesNodeObserver(){
-  let desNode = null;
+  let desNode = document.querySelector('#description yt-formatted-string');
   while(!desNode){
     desNode = document.querySelector('#description yt-formatted-string');
     await new Promise(r => setTimeout(r, 600));
