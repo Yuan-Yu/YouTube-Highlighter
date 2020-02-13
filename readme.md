@@ -12,6 +12,9 @@ Install YTHL through Chrome extension store: [Link](https://chrome.google.com/we
 
 ## Feature:  
 
+#### Features of version 0.11:
+Update according to the changes of YouTube UI   
+
 #### Features of version 0.10:  
 Fix bug that cause highlight can't be remove.  
 

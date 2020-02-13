@@ -127,13 +127,11 @@ function renderCommentsHighLigh(data){
   let comments = handleRawout(data);
   renderBar(comments);
 }
-
 function renderBar(comments){
   var duration = player.getDuration();
-  var bar = document.getElementsByClassName('ytp-progress-bar')[0];
+  var bar = document.getElementsByClassName('ytp-chapter-hover-container')[0];
   var barPadding = document.getElementsByClassName('ytp-progress-bar-padding')[0];
   var highLighElements = [];
-
   comments.forEach((comment) =>{
     highLighElements = highLighElements.concat(createHighLights(comment,duration));
   });
