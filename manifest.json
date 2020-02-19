@@ -1,7 +1,7 @@
 {
     "name": "YT-HighLighter",
 	"short_name": "YTHL",
-    "version": "0.11",
+    "version": "0.12",
     "description": "A timecode tracker for YouTube",
     "permissions": ["tabs","activeTab", "declarativeContent","https://www.youtube.com/*"],
     "background": {
